@@ -23,6 +23,7 @@ public class GenreService {
 
         var returnList = new ArrayList<GenreDTO>();
 
+
         for (Genre g : genreList){
             var genreDTO = new GenreDTO();
             genreDTO.setId(g.getId());
