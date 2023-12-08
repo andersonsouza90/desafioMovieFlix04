@@ -4,6 +4,8 @@ import com.devsuperior.movieflix.dto.MovieCardDTO;
 import com.devsuperior.movieflix.dto.MovieDetailsDTO;
 import com.devsuperior.movieflix.services.MovieService;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.Pageable;
 import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.web.bind.annotation.*;
 
@@ -24,7 +26,7 @@ public class MovieController {
 
     @PreAuthorize("hasAnyRole('VISITOR', 'MEMBER')")
     @GetMapping
-    public List<MovieCardDTO> getMovies(@RequestParam(name = "genreId", defaultValue = "0") Long genreId){
-        return service.findAllMovie(genreId);
+    public Page<MovieCardDTO> getMovies(Pageable pageable, @RequestParam(name = "genreId", defaultValue = "0") Long genreId){
+        return service.findAllMovie(pageable, genreId);
     }
 }

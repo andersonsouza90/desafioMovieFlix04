@@ -7,6 +7,8 @@ import com.devsuperior.movieflix.entities.Movie;
 import com.devsuperior.movieflix.repositories.MovieRepository;
 import com.devsuperior.movieflix.services.exceptions.ResourceNotFoundException;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Service;
 
 import java.util.ArrayList;
@@ -40,32 +42,26 @@ public class MovieService {
     }
 
 
-    public List<MovieCardDTO> findAllMovie(Long genreId) {
+    public Page<MovieCardDTO> findAllMovie(Pageable pageable, Long genreId) {
 
-        var movieList = new ArrayList<Movie>();
+        Page<Movie> movieList;
 
         if (genreId == 0){
-            movieList.addAll(repository.findAllByOrderByTitleAsc());
+            movieList = repository.findAllByOrderByTitleAsc(pageable);
         }else{
-            movieList.addAll(repository.findByGenreId(genreId));
+            movieList = repository.findByGenreId(pageable, genreId);
         }
 
-        var movieListDTO = new ArrayList<MovieCardDTO>();
-
-        for (Movie movie : movieList){
-            var movieCardDTO = new MovieCardDTO();
+        return movieList.map(movie -> {
+            MovieCardDTO movieCardDTO = new MovieCardDTO();
             movieCardDTO.setId(movie.getId());
             movieCardDTO.setTitle(movie.getTitle());
             movieCardDTO.setSubTitle(movie.getSubTitle());
             movieCardDTO.setYear(movie.getYear());
             movieCardDTO.setImgUrl(movie.getImgUrl());
+            return movieCardDTO;
+        });
 
-            //movieCardDTO.set
-
-
-            movieListDTO.add(movieCardDTO);
-        }
-
-        return movieListDTO;
     }
+
 }
